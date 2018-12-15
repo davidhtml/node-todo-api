@@ -24,7 +24,7 @@ app.post('/todos', (req, res) => {
 });
 
 app.get('/todos', (req, res) => {
-    console.log('get request response =>>', res.body);
+    console.log('get request =>>', req.body);
 
     Todo.find()
         .then((todos) => {
@@ -34,7 +34,7 @@ app.get('/todos', (req, res) => {
         })
         .catch(e => {
             res.status(400).send(e);
-        })
+        });
 });
 
 app.listen(3003, () => {

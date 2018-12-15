@@ -16,6 +16,6 @@ const User = mongoose.model('User', {
 // newUser.save()
 //     .then(res => console.log('data that has been saved', res))
 //
-// module.exports = {
-//     User
-// }
+module.exports = {
+    User
+}

@@ -7,6 +7,7 @@ const {ObjectID} = require('mongodb');
 const { mongoose } = require('./db/mongoose');
 const { Todo } = require('./models/todo');
 const { User } = require('./models/user');
+const { authenticate } = require('./middleware/authenticate');
 
 const app = express();
 const port = process.env.PORT;
@@ -109,18 +110,22 @@ app.post('/users', (req, res) => {
 
     user.save()
         .then(() => {
-            console.log('FIRST CONSOLE>')
+            // console.log('FIRST CONSOLE>')
             return user.generateAuthToken();
         })
         .then(token => {
-            console.log('THIRD CONSOLE=>', token)
+            // console.log('THIRD CONSOLE=>', token)
             res.header('x-auth', token).send(user)
         })
         .catch(e => {
-            console.log('did we reach catch')
+            // console.log('did we reach catch')
             console.log(e);
             res.status(400).send(e)
         })
+});
+
+app.get('/users/me', authenticate, (req, res) => {
+    res.send(req.user)
 })
 
 app.listen(port, () => {

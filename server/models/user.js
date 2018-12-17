@@ -36,7 +36,6 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.methods = {
     generateAuthToken: function() {
-        console.log("inside generateAuthToken function")
         const access = 'auth';
         const token = jwt.sign({_id: this._id.toHexString(), access: access}, 'verySuperSecretValue').toString();
 
@@ -44,7 +43,7 @@ UserSchema.methods = {
              access: access,
              token: token
         }]);
-        console.log('SECOND CONSOLE=>', this.tokens);
+        // console.log('SECOND CONSOLE=>', this.tokens);
 
         return this.save().then(() => {
                 return token;
@@ -57,9 +56,30 @@ UserSchema.methods = {
     }
 }
 
+UserSchema.statics = {
+    findByToken: function(token) {
+        console.log('insinde findByToken=>>>>', token)
+        let decoded;
+
+        try {
+            decoded = jwt.verify(token, 'verySuperSecretValue')
+        } catch (e) {
+            // return new Promise((resolve, reject) => {
+            //     reject();
+            // })
+            return Promise.reject();
+        }
+
+        return this.findOne({
+            '_id': decoded._id,
+            'tokens.token': token,
+            'tokens.access': 'auth'
+        })
+    }
+}
+
 const User = mongoose.model('User', UserSchema)
 
-//
 module.exports = {
     User
 }

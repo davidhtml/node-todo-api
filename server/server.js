@@ -101,6 +101,28 @@ app.patch('/todos/:id', (req, res) => {
         .catch(e => res.status(400).send())
 })
 
+//POST /user
+app.post('/users', (req, res) => {
+    const body = _.pick(req.body, ['email', 'password']);
+    const user = new User(body);
+    console.log('wtf user=>>>>>', user);
+
+    user.save()
+        .then(() => {
+            console.log('FIRST CONSOLE>')
+            return user.generateAuthToken();
+        })
+        .then(token => {
+            console.log('THIRD CONSOLE=>', token)
+            res.header('x-auth', token).send(user)
+        })
+        .catch(e => {
+            console.log('did we reach catch')
+            console.log(e);
+            res.status(400).send(e)
+        })
+})
+
 app.listen(port, () => {
     console.log(`Server started on port: ${port}`);
 });

@@ -1,0 +1,41 @@
+const jwt = require('jsonwebtoken');
+
+
+const data = {
+    id: 10
+};
+
+const token = jwt.sign(data, 'secretkey');
+console.log(token);
+const decoded = jwt.verify(token, 'secretkey');
+console.log('decoded token=>', decoded)
+
+
+// const {SHA256} = require('crypto-js');
+//
+// const msg = 'Username';
+//
+// const hashedMsg = SHA256(msg).toString();
+//
+// console.log(`original message: ${msg}`);
+// console.log(`hashed message: ${hashedMsg}`);
+//
+//
+// const data = {
+//     id: 123,
+// }
+//
+// const token = {
+//     data,
+//     hash: SHA256(JSON.stringify(data) + 'secretkey').toString()
+// }
+//
+// token.hash = SHA256(JSON.stringify(data)).toString()
+//
+// const resultHash = SHA256(JSON.stringify(data) + 'secretkey').toString();
+//
+// if (resultHash === token.hash) {
+//     console.log('token is correct, please log in')
+// } else {
+//     console.log('incorrect token, error error')
+// }

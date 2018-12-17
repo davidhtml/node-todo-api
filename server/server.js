@@ -53,6 +53,26 @@ app.get('/todos/:betkoksId', (req, res) => {
         })
         .catch((e) => res.status(400).send())
 
+});
+
+//DELETE // TODO:
+
+app.delete('/todos/:id', (req, res) => {
+    console.log(req.params.id)
+    const id = req.params.id;
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send()
+    }
+    Todo.findByIdAndRemove(id)
+        .then(todo => {
+            if (!todo) {
+                return res.status(404).send()
+            }
+            console.log('deleting todo item');
+            res.status(200).send({todo})
+        })
+        .catch(e => res.status(400).send())
 })
 
 app.listen(port, () => {
@@ -62,8 +82,3 @@ app.listen(port, () => {
 module.exports = {
     app
 };
-
-
-// const mongoose = require('mongoose');
-// mongoose.Promise = global.Promise;
-// mongoose.connect('mongodb://localhost:27017/TodoApp');

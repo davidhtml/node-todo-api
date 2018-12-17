@@ -92,8 +92,6 @@ describe('GET /todos/betkoksId', () => {
             .end(done)
     });
 
-
-    //
     it('should return 404 if todo is not found', (done) => {
         const randomId = new ObjectID();
 
@@ -102,15 +100,53 @@ describe('GET /todos/betkoksId', () => {
             .expect(404)
             .end(done)
     })
-    //
-    it('should return 404 if non object id', (done) => {
-        // if (!ObjectID.isValid(todos[0]._id)) {
-        //     return
-        // }
 
+    it('should return 404 if non object id', (done) => {
         request(app)
             .get(`/todos/123`)
             .expect(404)
             .end(done)
     })
 });
+
+describe('DELETE/todos/:id', () => {
+    it('should remove a todo', (done) => {
+        const id = todos[1]._id.toHexString();
+        console.log(id);
+        request(app)
+            .delete(`/todos/${id}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.todo.text).toBe(todos[1].text)
+            })
+            .end((err, res) => {
+
+                if (err) {
+                    return done(err);
+                }
+
+                Todo.findById(id)
+                    .then(todo => {
+                        expect(todo).toNotExist();
+                        done();
+                    })
+                    .catch(e => done(e))
+            })
+    })
+
+    it('should return 404 if id is not found', (done) => {
+        const randomId = new ObjectID();
+
+        request(app)
+            .delete(`/todos/${randomId.toHexString()}`)
+            .expect(404)
+            .end(done)
+    })
+
+    it('should return 404 if object id is invalid', (done) => {
+        request(app)
+            .delete(`/todos/123`)
+            .expect(404)
+            .end(done)
+    })
+})

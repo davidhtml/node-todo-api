@@ -15,22 +15,18 @@ const port = process.env.PORT;
 app.use(bodyParser.json());
 
 app.post('/todos', (req, res) => {
-    console.log('checking request body=>>>', req.body);
     const todo = new Todo({
         text: req.body.text
     });
 
     todo.save()
         .then(data => {
-            console.log('isaugomi duomenys =>>', data)
              res.send(data)
         })
         .catch(e => res.status(400).send(e))
 });
 
 app.get('/todos', (req, res) => {
-    console.log('get request =>>', req.body);
-
     Todo.find()
         .then((todos) => {
             res.send({
@@ -61,7 +57,6 @@ app.get('/todos/:betkoksId', (req, res) => {
 //DELETE // TODO:
 
 app.delete('/todos/:id', (req, res) => {
-    console.log(req.params.id)
     const id = req.params.id;
 
     if (!ObjectID.isValid(id)) {
@@ -72,7 +67,6 @@ app.delete('/todos/:id', (req, res) => {
             if (!todo) {
                 return res.status(404).send()
             }
-            console.log('deleting todo item');
             res.status(200).send({todo})
         })
         .catch(e => res.status(400).send())
@@ -106,7 +100,6 @@ app.patch('/todos/:id', (req, res) => {
 app.post('/users', (req, res) => {
     const body = _.pick(req.body, ['email', 'password']);
     const user = new User(body);
-    console.log('wtf user=>>>>>', user);
 
     user.save()
         .then(() => {
@@ -119,7 +112,6 @@ app.post('/users', (req, res) => {
         })
         .catch(e => {
             // console.log('did we reach catch')
-            console.log(e);
             res.status(400).send(e)
         })
 });

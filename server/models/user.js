@@ -38,7 +38,7 @@ const UserSchema = new mongoose.Schema({
 UserSchema.methods = {
     generateAuthToken: function() {
         const access = 'auth';
-        const token = jwt.sign({_id: this._id.toHexString(), access: access}, 'verySuperSecretValue').toString();
+        const token = jwt.sign({_id: this._id.toHexString(), access: access}, process.env.JWT_SECRET).toString();
 
         this.tokens = this.tokens.concat([{
              access: access,
@@ -73,7 +73,7 @@ UserSchema.statics = {
         let decoded;
 
         try {
-            decoded = jwt.verify(token, 'verySuperSecretValue')
+            decoded = jwt.verify(token, process.env.JWT_SECRET)
         } catch (e) {
             // return new Promise((resolve, reject) => {
             //     reject();

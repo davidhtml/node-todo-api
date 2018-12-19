@@ -116,6 +116,24 @@ app.post('/users', (req, res) => {
         })
 });
 
+app.post('/users/login', (req, res) => {
+    // console.log(req)
+    const body = _.pick(req.body, ['email', 'password']);
+    // const user = new User(body);
+
+    User.findByCredentials(body.email, body.password)
+    .then(user => {
+        return user.generateAuthToken()
+            .then(token => {
+                res.header('x-auth', token).send(user)
+            })
+
+    })
+    .catch(err => {
+        res.status(400).send('ups something went wrong, try again later');
+    })
+})
+
 app.get('/users/me', authenticate, (req, res) => {
     res.send(req.user)
 })

@@ -76,8 +76,32 @@ UserSchema.statics = {
             'tokens.token': token,
             'tokens.access': 'auth'
         })
+    },
+    findByCredentials: function(email, password) {
+        const User = this;
+
+        return User.findOne({
+            email: email
+        })
+        .then(user => {
+            if (!user) {
+                return Promise.reject();
+            }
+            return new Promise((resolve, reject) => {
+                 bcrypt.compare(password, user.password, (err, result) => {
+                    if (result) {
+                        resolve(user);
+                    } else if (!result) {
+                        reject();
+                    }
+                })
+                //use bcrypt.compare to check our pass with user's
+            })
+        })
+        .catch(err => Promise.reject())
     }
 }
+
 
 UserSchema.pre('save', function(next) {
     const user = this;

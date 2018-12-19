@@ -57,16 +57,13 @@ UserSchema.methods = {
     },
     removeToken: function(token) {
         const user = this;
-        console.log('token from removeToken function', token)
-        let returnedVal = user.update({
+        return user.update({
             $pull: {
                 tokens: {
                     token: token
                 }
             }
         })
-        // console.log('returned value =>>>>', returnedVal)
-        return returnedVal;
     }
 }
 

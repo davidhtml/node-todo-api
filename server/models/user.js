@@ -54,6 +54,19 @@ UserSchema.methods = {
         const userObject = this.toObject();
 
         return _.pick(userObject, ['_id', 'email']);
+    },
+    removeToken: function(token) {
+        const user = this;
+        console.log('token from removeToken function', token)
+        let returnedVal = user.update({
+            $pull: {
+                tokens: {
+                    token: token
+                }
+            }
+        })
+        // console.log('returned value =>>>>', returnedVal)
+        return returnedVal;
     }
 }
 

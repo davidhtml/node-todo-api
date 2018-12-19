@@ -19,7 +19,11 @@ const users = [
     {
         _id: userTwoId,
         email: 'second@email.com',
-        password: 'secondUserPass'
+        password: 'secondUserPass',
+        tokens:[{
+            access: 'auth',
+            token: jwt.sign({_id: userTwoId, access: 'auth'}, 'verySuperSecretValue').toString()
+        }]
     }
 ]
 
@@ -27,13 +31,15 @@ const users = [
 const todos = [
     {
         _id: new ObjectID(),
-        text: "first long string for testing"
+        text: "first long string for testing",
+        _creator: userOneId
     },
     {
         _id: new ObjectID(),
         text: "second long string for testing",
         completed: true,
-        completedAt: 33312
+        completedAt: 33312,
+        _creator: userTwoId
     }
 ]
 

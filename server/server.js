@@ -117,9 +117,7 @@ app.post('/users', (req, res) => {
 });
 
 app.post('/users/login', (req, res) => {
-    // console.log(req)
     const body = _.pick(req.body, ['email', 'password']);
-    // const user = new User(body);
 
     User.findByCredentials(body.email, body.password)
     .then(user => {
